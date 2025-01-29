@@ -1,0 +1,66 @@
+/* Navbar Styles */
+.navbar {
+  @apply flex flex-col min-h-screen;
+}
+
+.navbar nav {
+  @apply bg-primary 
+    font-rale 
+    text-white
+    p-4 
+    flex justify-around
+    items-center;
+}
+
+.nav-list {
+  @apply flex space-x-4;
+}
+
+.nav-items a,
+.login {
+  @apply text-white
+    font-medium
+    transition-colors duration-200;
+}
+
+.nav-items a:hover,
+.login:hover {
+  @apply text-fs-stone;
+}
+
+.nav-title h1 {
+  @apply justify-self-center text-center text-4xl font-light;
+}
+
+.panel-right {
+  @apply flex items-center space-x-4 p-2;
+}
+
+.cart-link {
+  @apply relative;
+}
+
+.cart-link:hover {
+  @apply text-fs-stone;
+}
+
+.cart-icon {
+  @apply w-6 h-6;
+}
+
+.cart-number {
+  @apply absolute flex items-center justify-center bg-black text-white text-xs rounded-full top-0 w-[1.15rem] h-[1.15rem];
+  transform: translate(50%, -50%);
+}
+
+.login {
+  @apply px-2;
+}
+
+.outlet {
+  @apply flex-1 py-8;
+}
+
+.footer {
+  @apply bg-primary text-white text-center p-4 mt-8;
+}
