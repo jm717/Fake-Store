@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import Modal from "../element/modal";
@@ -7,9 +7,10 @@ const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const cartPriceTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
+  const cartPriceTotal = useMemo(
+    () =>
+      cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+    [cartItems]
   );
 
   const openPaymentModal = () => {
@@ -36,6 +37,7 @@ const Cart = () => {
             <h2>Your Cart</h2>
             <ul className="divide-y">
               {cartItems.map((item) => (
+                // @todo: move to own component: Code Splitting
                 <li key={item.id} className="cart-item">
                   <div className="cart-item-wrapper">
                     <img src={item.image} alt={item.title} />
@@ -66,8 +68,7 @@ const Cart = () => {
                       </button>
                     </div>
                     <button onClick={() => removeFromCart(item.id)}>
-                      {" "}
-                      Remove{" "}
+                      Remove
                     </button>
                   </div>
                 </li>

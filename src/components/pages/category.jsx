@@ -1,48 +1,44 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
 import ProductList from "../element/productList";
 
 const Category = () => {
-  const [categories, setCategories] = useState([]);
-  const [categoryImages, setCategoryImages] = useState({});
+  const [allCategories, setAllCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  // mapping { mens: "img.jpg", womens: "img2.jpg" }
+  const [categoryImages, setCategoryImages] = useState({});
   const [sortOrder, setSortOrder] = useState("");
-  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data);
+        setAllCategories(data);
         data.forEach((category) => {
           fetch(
             `https://fakestoreapi.com/products/category/${category}?limit=1`
           )
             .then((res) => res.json())
-            .then((products) => {
+            .then((product) => {
               setCategoryImages((prev) => ({
                 ...prev,
-                [category]: products[0]?.image || "",
+                [category]: product[0]?.image || "",
               }));
             })
-            .catch((error) =>
+            .catch((err) =>
               console.log(
                 `Err[category]: Failed to get image for ${category}:`,
-                error
+                err
               )
             );
         });
       })
-      .catch((error) => console.log("Err[category]:", error));
+      .catch((error) =>
+        console.log("Err[category]: Failed to get all categories", error)
+      );
   }, []);
 
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
-  };
-
-  const handleAddToCart = (product) => {
-    addToCart(product);
   };
 
   return (
@@ -50,7 +46,7 @@ const Category = () => {
       <h2>Shop by Category</h2>
 
       <div className="categories">
-        {categories.map((category, index) => (
+        {allCategories.map((category, index) => (
           <div
             key={index}
             className="category-tile"
@@ -92,7 +88,6 @@ const Category = () => {
               <ProductList
                 sortOrder={sortOrder}
                 selectedCategory={selectedCategory}
-                onAddToCart={handleAddToCart}
               />
             </Suspense>
           </div>

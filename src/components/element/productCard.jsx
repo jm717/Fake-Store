@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
+import { useCart } from "../../context/CartContext";
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = React.memo(({ product }) => {
+  // @todo: Use Css to hide and dislay
   const [isCardHovered, setIsCardHovered] = useState(false);
+  const { addToCart } = useCart();
 
-  const handleAddToCart = () => {
-    onAddToCart(product);
+  const handleAddToCart = (product) => {
+    addToCart(product);
   };
 
   return (
@@ -19,7 +22,10 @@ const ProductCard = ({ product, onAddToCart }) => {
           <img src={product.image} alt={product.title} />
           {isCardHovered && (
             <div className="product-hover-panel">
-              <button onClick={handleAddToCart} className="add-to-cart-btn">
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="add-to-cart-btn"
+              >
                 ADD TO CART
               </button>
             </div>
@@ -32,6 +38,6 @@ const ProductCard = ({ product, onAddToCart }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ProductCard;

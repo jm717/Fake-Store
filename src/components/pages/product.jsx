@@ -1,21 +1,20 @@
 import React, { useEffect, useState, Suspense } from "react";
 import "./style.css";
-import { useCart } from "../../context/CartContext";
-import Modal from "../element/modal";
 
 const ProductList = React.lazy(() => import("../element/productList"));
 
 const Product = () => {
   const [sortOrder, setSortOrder] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
       .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch((error) => console.log("Error fetching categories:", error));
+      .then((data) => setAllCategories(data))
+      .catch((err) =>
+        console.log("Err[product]: Failed to fetch categories", err)
+      );
   }, []);
 
   const handleSortChange = (e) => {
@@ -26,22 +25,19 @@ const Product = () => {
     setSelectedCategory(e.target.value);
   };
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-  };
-
   return (
     <div className="product-wrapper">
       <div className="option-container">
         <div className="filter">
           <span className="label">Filter By</span>
           <select
+            name="filter-dropdown"
             value={selectedCategory}
             onChange={handleFilterChange}
             className="dropdown"
           >
             <option value="">Category</option>
-            {categories.map((category, index) => (
+            {allCategories.map((category, index) => (
               <option key={index} value={category}>
                 {category}
               </option>
@@ -51,6 +47,7 @@ const Product = () => {
         <div className="sort">
           <span className="label">Sort By</span>
           <select
+            name="sort-dropdown"
             value={sortOrder}
             onChange={handleSortChange}
             className="dropdown"
@@ -65,7 +62,6 @@ const Product = () => {
         <ProductList
           sortOrder={sortOrder}
           selectedCategory={selectedCategory}
-          onAddToCart={handleAddToCart}
         />
       </Suspense>
     </div>

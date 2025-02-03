@@ -2,27 +2,25 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "./productCard";
 import "./style.css";
 
-const ProductList = ({ sortOrder, selectedCategory, onAddToCart }) => {
+const ProductList = React.memo(({ sortOrder, selectedCategory }) => {
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     // @todo:create env var
     let url = "https://fakestoreapi.com/products";
 
-    if (selectedCategory) {
-      url += `/category/${selectedCategory}`;
-    }
+    if (selectedCategory) url += `/category/${selectedCategory}`;
 
-    if (sortOrder) {
-      // sorts by item id, not title
-      url += `?sort=${sortOrder}`;
-    }
+    // sorts by item id, not title
+    if (sortOrder) url += `?sort=${sortOrder}`;
 
     const res = await fetch(url);
     const data = await res.json();
-    setProducts(data);
+    // @todo: immutation: same reference, react won't trigger re-render
+    setProducts([...data]);
   };
 
+  // @todo: check warning seen in terminal
   useEffect(() => {
     fetchProducts();
   }, [sortOrder, selectedCategory]);
@@ -32,16 +30,12 @@ const ProductList = ({ sortOrder, selectedCategory, onAddToCart }) => {
       <h1 className="p-1">All Items</h1>
       <div className="product-grid">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={onAddToCart}
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>
   );
-};
+});
 
 export default ProductList;
 

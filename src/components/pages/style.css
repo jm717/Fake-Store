@@ -155,7 +155,7 @@
 }
 
 .welcome p {
-  @apply text-lg mt-2 animate-fade-in delay-200;
+  @apply text-lg mt-2 delay-200;
 }
 
 .carousel-container {
